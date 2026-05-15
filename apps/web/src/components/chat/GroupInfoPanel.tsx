@@ -71,7 +71,7 @@ export function GroupInfoPanel({ conversation, currentUserId, onClose, onConvers
     setError(null);
     try {
       await api.post(`/groups/${conversation._id}/members`, { userIds: [userId] });
-      setAddedIds((prev) => new Set([...prev, userId]));
+      setAddedIds((prev) => new Set(Array.from(prev).concat(userId)));
       // Refresh conversation to show new member
       const { data } = await api.get(`/conversations/${conversation._id}`);
       onConversationUpdate(data);
