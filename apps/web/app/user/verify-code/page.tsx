@@ -1,4 +1,5 @@
 'use client';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -18,6 +19,15 @@ export default function VerifyCodePage() {
   const router = useRouter();
   const loginWithToken = useAuthStore((s) => s.loginWithToken);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({ resolver: zodResolver(schema) });
+
+  // If already logged in (token in store), restore cookie and go straight to app
+  useEffect(() => {
+    const { token, user } = useAuthStore.getState();
+    if (token && user) {
+      document.cookie = 'user_session=1; path=/; max-age=2592000; SameSite=Lax';
+      router.replace('/app/chats');
+    }
+  }, [router]);
 
   const onSubmit = async (data: FormData) => {
     try {
