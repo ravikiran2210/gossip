@@ -7,8 +7,8 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Messenger',
-  description: 'Admin-gated realtime messenger',
+  title: 'Gossip',
+  description: 'Gossip — stay connected with the people that matter',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
