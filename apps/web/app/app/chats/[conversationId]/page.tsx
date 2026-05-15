@@ -148,8 +148,8 @@ export default function ConversationPage() {
   return (
     <AppLayout>
       <ConversationList className="hidden md:flex md:w-80 flex-shrink-0" />
-      <div className="flex-1 flex min-w-0 relative">
-        <div className="flex-1 flex flex-col bg-gray-50 min-w-0">
+      <div className="flex-1 flex min-w-0 min-h-0 relative">
+        <div className="flex-1 flex flex-col bg-gray-50 min-w-0 min-h-0">
           {/* Header */}
           <div className="bg-white border-b px-4 py-3 flex items-center gap-3 shadow-sm">
             <button
@@ -218,8 +218,8 @@ export default function ConversationPage() {
             </div>
           )}
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-0.5">
+          {/* Messages — flex-1 + min-h-0 ensures this scrolls rather than overflowing */}
+          <div className="flex-1 overflow-y-auto min-h-0 p-4 space-y-0.5">
             {displayMessages.length === 0 && (
               <div className="flex items-center justify-center h-full">
                 <p className="text-gray-400 text-sm">

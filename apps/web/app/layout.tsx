@@ -16,6 +16,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       {/* Apply dark class before first paint to prevent flash */}
       <head>
+        {/* viewport-fit=cover lets content extend into iOS notch/home-bar safe areas */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{if(localStorage.getItem('darkMode')==='true'){document.documentElement.classList.add('dark')}}catch(e){}})()`,

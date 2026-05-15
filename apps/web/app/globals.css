@@ -8,7 +8,19 @@
 
 html,
 body {
-  height: 100%; 
+  height: 100%;
+  /* Prevent iOS bounce scroll at the root level */
+  overscroll-behavior: none;
+}
+
+/* iOS safe-area padding for the message input area */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Ensure the viewport fills correctly including iOS notch/home bar areas */
+@supports (height: 100dvh) {
+  .h-dvh { height: 100dvh; }
 }
 
 @layer utilities {

@@ -156,7 +156,7 @@ export function MessageInput({ conversationId }: MessageInputProps) {
   };
 
   return (
-    <div className="relative bg-white border-t">
+    <div className="relative bg-white border-t pb-safe flex-shrink-0">
       {/* Emoji picker */}
       {showEmoji && (
         <div className="absolute bottom-full left-0 mb-2 z-50">
