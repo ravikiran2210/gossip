@@ -38,10 +38,25 @@ export default function ConversationPage() {
   const [searchResults, setSearchResults] = useState<Message[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  // true = user is within 120px of the bottom; starts true so initial load scrolls down
+  const isNearBottomRef = useRef(true);
+  // track previous message count to distinguish new messages from status/reaction updates
+  const prevMsgCountRef = useRef(0);
   const searchDebounce = useRef<NodeJS.Timeout>();
+
+  // Update isNearBottomRef as user scrolls
+  const handleMessagesScroll = useCallback(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    isNearBottomRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 120;
+  }, []);
 
   useEffect(() => {
     if (!user && !token) { router.replace('/user/verify-code'); return; }
+    // Reset scroll state for the new conversation
+    prevMsgCountRef.current = 0;
+    isNearBottomRef.current = true;
     setActiveConversation(conversationId);
     loadMessages(conversationId);
     markConversationRead(conversationId);
@@ -59,13 +74,31 @@ export default function ConversationPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversationId, user, token]);
 
-  // Mark read when messages are loaded or new ones arrive while this conversation is active
+  // Scroll and read-receipt logic whenever the message list changes
   useEffect(() => {
     const msgs = messages[conversationId];
     if (!msgs?.length) return;
 
     markConversationRead(conversationId);
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+
+    const prevCount = prevMsgCountRef.current;
+    const newCount = msgs.length;
+
+    if (prevCount === 0) {
+      // Initial load — jump instantly to the bottom, no animation
+      messagesEndRef.current?.scrollIntoView({ behavior: 'instant' as ScrollBehavior });
+    } else if (newCount > prevCount) {
+      // A new message arrived — only scroll if the user is near the bottom
+      // OR if the last message is their own (they just sent it)
+      const lastMsg = msgs[newCount - 1];
+      const isMine = lastMsg?.senderId === user?._id;
+      if (isMine || isNearBottomRef.current) {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    // Same count = status/reaction update — don't scroll at all
+
+    prevMsgCountRef.current = newCount;
 
     // Emit socket read receipt for the last message sent by someone else
     const lastFromOther = [...msgs].reverse().find((m) => m.senderId !== user?._id);
@@ -219,7 +252,11 @@ export default function ConversationPage() {
           )}
 
           {/* Messages — flex-1 + min-h-0 ensures this scrolls rather than overflowing */}
-          <div className="flex-1 overflow-y-auto min-h-0 p-4 space-y-0.5">
+          <div
+            ref={scrollContainerRef}
+            onScroll={handleMessagesScroll}
+            className="flex-1 overflow-y-auto min-h-0 p-4 space-y-0.5 overscroll-contain"
+          >
             {displayMessages.length === 0 && (
               <div className="flex items-center justify-center h-full">
                 <p className="text-gray-400 text-sm">

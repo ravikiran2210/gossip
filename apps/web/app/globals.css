@@ -9,8 +9,6 @@
 html,
 body {
   height: 100%;
-  /* Prevent iOS bounce scroll at the root level */
-  overscroll-behavior: none;
 }
 
 /* iOS safe-area padding for the message input area */
