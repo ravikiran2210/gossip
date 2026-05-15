@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: messenger-backend
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: pnpm install && pnpm --filter backend build
+    startCommand: node apps/backend/dist/main
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - fromGroup: messenger-secrets
