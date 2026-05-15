@@ -13,7 +13,7 @@ import { TypingIndicator } from '@/components/chat/TypingIndicator';
 import { GroupInfoPanel } from '@/components/chat/GroupInfoPanel';
 import { Avatar } from '@/components/ui/Avatar';
 import type { Conversation, Message } from '@/types';
-import { Info, Search, X } from 'lucide-react';
+import { Info, Search, X, ArrowLeft } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 export default function ConversationPage() {
@@ -147,11 +147,19 @@ export default function ConversationPage() {
 
   return (
     <AppLayout>
-      <ConversationList />
-      <div className="flex-1 flex min-w-0">
+      <ConversationList className="hidden md:flex md:w-80 flex-shrink-0" />
+      <div className="flex-1 flex min-w-0 relative">
         <div className="flex-1 flex flex-col bg-gray-50 min-w-0">
           {/* Header */}
           <div className="bg-white border-b px-4 py-3 flex items-center gap-3 shadow-sm">
+            <button
+              type="button"
+              aria-label="Back to chats"
+              onClick={() => router.push('/app/chats')}
+              className="md:hidden p-1.5 -ml-1 rounded-lg hover:bg-gray-100 text-gray-500 flex-shrink-0"
+            >
+              <ArrowLeft size={20} />
+            </button>
             <Avatar
               name={getConvName()}
               avatarUrl={conversation?.type === 'direct' ? conversation?.otherUser?.avatarUrl : conversation?.avatarUrl}
@@ -241,14 +249,19 @@ export default function ConversationPage() {
           {!showSearch && <MessageInput conversationId={conversationId} />}
         </div>
 
-        {/* Group info panel */}
+        {/* Group info panel — overlay on mobile, sidebar on desktop */}
         {showInfo && conversation && (
-          <GroupInfoPanel
-            conversation={conversation}
-            currentUserId={user?._id || ''}
-            onClose={() => setShowInfo(false)}
-            onConversationUpdate={setConversation}
-          />
+          <>
+            <div className="absolute inset-0 z-40 bg-black/20 md:hidden" onClick={() => setShowInfo(false)} />
+            <div className="absolute right-0 top-0 bottom-0 z-50 md:relative md:inset-auto md:z-auto shadow-xl md:shadow-none">
+              <GroupInfoPanel
+                conversation={conversation}
+                currentUserId={user?._id || ''}
+                onClose={() => setShowInfo(false)}
+                onConversationUpdate={setConversation}
+              />
+            </div>
+          </>
         )}
       </div>
     </AppLayout>

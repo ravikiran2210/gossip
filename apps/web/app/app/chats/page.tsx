@@ -25,7 +25,7 @@ export default function ChatsPage() {
   return (
     <AppLayout>
       <ConversationList />
-      <div className="flex-1 flex flex-col items-center justify-center text-gray-400 bg-gray-50">
+      <div className="hidden md:flex flex-1 flex-col items-center justify-center text-gray-400 bg-gray-50">
         <MessageSquare size={48} className="mb-4 text-gray-300" />
         <p className="text-lg font-medium text-gray-500">Select a conversation</p>
         <p className="text-sm mb-6">or start a new one</p>

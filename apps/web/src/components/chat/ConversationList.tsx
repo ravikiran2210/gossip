@@ -9,7 +9,7 @@ import { cn } from '@/utils';
 import { Search, Plus, Pin } from 'lucide-react';
 import type { Conversation } from '@/types';
 
-export function ConversationList() {
+export function ConversationList({ className }: { className?: string }) {
   const pathname = usePathname();
   const { conversations, loadConversations, isLoadingConversations, onlineUsers, pinConversation } = useChatStore();
   const [search, setSearch] = useState('');
@@ -40,7 +40,7 @@ export function ConversationList() {
   });
 
   return (
-    <div className="w-80 bg-white border-r flex flex-col">
+    <div className={cn('w-full md:w-80 bg-white border-r flex flex-col', className)}>
       {/* Header */}
       <div className="p-4 border-b">
         <div className="flex items-center justify-between mb-3">
