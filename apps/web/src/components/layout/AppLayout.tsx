@@ -41,8 +41,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               className={cn(
                 'w-10 h-10 flex items-center justify-center rounded-2xl transition-all',
                 active
-                  ? 'bg-brand-500 text-white shadow-md shadow-brand-500/30'
-                  : 'text-gray-400 hover:bg-brand-50 hover:text-brand-500',
+                  ? 'bg-gray-900 text-white dark:bg-white dark:text-black'
+                  : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-700',
               )}
             >
               <Icon size={20} />
@@ -86,11 +86,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             >
               <div className={cn(
                 'w-10 h-10 flex items-center justify-center rounded-2xl transition-all',
-                active ? 'bg-brand-500 text-white shadow-md shadow-brand-500/20' : 'text-gray-400',
+                active ? 'bg-gray-900 text-white dark:bg-white dark:text-black' : 'text-gray-400',
               )}>
                 <Icon size={20} />
               </div>
-              <span className={cn('text-[10px] font-medium', active ? 'text-brand-500' : 'text-gray-400')}>
+              <span className={cn('text-[10px] font-medium', active ? 'text-gray-900 dark:text-white' : 'text-gray-400')}>
                 {label}
               </span>
             </Link>

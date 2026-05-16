@@ -51,16 +51,16 @@ export function ConversationList({ className }: { className?: string }) {
             <Link href="/app/profile">
               {user
                 ? <Avatar name={user.name} avatarUrl={user.avatarUrl} size="sm" />
-                : <div className="w-8 h-8 rounded-full bg-brand-100" />
+                : <div className="w-8 h-8 rounded-full bg-gray-200" />
               }
             </Link>
-            <h1 className="text-xl font-black text-gray-900">Gossip</h1>
+            <h1 className="text-xl font-black text-gray-900 dark:text-white">Gossip</h1>
           </div>
           <button
             type="button"
             aria-label="New chat"
             onClick={() => setShowNewChat(true)}
-            className="w-9 h-9 flex items-center justify-center bg-brand-50 hover:bg-brand-100 text-brand-600 rounded-full transition-colors"
+            className="w-9 h-9 flex items-center justify-center bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 rounded-full transition-colors"
           >
             <SquarePen size={18} />
           </button>
@@ -100,7 +100,7 @@ export function ConversationList({ className }: { className?: string }) {
               <button
                 type="button"
                 onClick={() => setShowNewChat(true)}
-                className="text-xs bg-brand-500 text-white px-4 py-2 rounded-full font-medium hover:bg-brand-600 transition-colors"
+                className="text-xs bg-gray-900 text-white px-4 py-2 rounded-full font-medium hover:bg-black transition-colors"
               >
                 Start a conversation
               </button>
@@ -121,8 +121,8 @@ export function ConversationList({ className }: { className?: string }) {
                     className={cn(
                       'flex items-center gap-3 px-3 py-3 rounded-2xl transition-colors',
                       isActive
-                        ? 'bg-brand-50'
-                        : 'hover:bg-gray-50',
+                        ? 'bg-brand-50 dark:bg-white/5'
+                        : 'hover:bg-gray-50 dark:hover:bg-white/5',
                     )}
                   >
                     <Avatar
@@ -147,7 +147,7 @@ export function ConversationList({ className }: { className?: string }) {
                             {conv.lastMessageAt ? formatConversationTime(conv.lastMessageAt) : ''}
                           </span>
                           {unread > 0 && (
-                            <span className="min-w-[20px] h-5 flex items-center justify-center rounded-full bg-brand-500 text-white text-[10px] font-bold px-1.5">
+                            <span className="min-w-[20px] h-5 flex items-center justify-center rounded-full bg-blue-500 text-white text-[10px] font-bold px-1.5">
                               {unread > 99 ? '99+' : unread}
                             </span>
                           )}

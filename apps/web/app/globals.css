@@ -22,8 +22,6 @@ body {
 }
 
 @layer utilities {
-  /* scrollbar-width is standard but unsupported in Safari/older Chrome.
-     The ::-webkit-scrollbar rules provide an equivalent cross-browser fallback. */
   .scrollbar-thin {
     scrollbar-width: thin;
   }
@@ -40,67 +38,97 @@ body {
   }
 }
 
-/* ── Dark mode overrides ──────────────────────────────────────────── */
-/* Sociable-inspired dark theme: very warm dark background (#1a0d05 family) */
+/* ── Dark mode — pure black/white theme ───────────────────────────── */
 
 .dark {
   color-scheme: dark;
 }
 
 .dark body {
-  background-color: #120800;
-  color: #f5ede6;
+  background-color: #0a0a0a;
+  color: #f0f0f0;
 }
 
-/* Backgrounds */
-.dark .bg-white          { background-color: #1e1008 !important; }
-.dark .bg-gray-50        { background-color: #120800 !important; }
-.dark .bg-gray-100       { background-color: #1e1008 !important; }
-.dark .bg-\[\#f0f2f5\]  { background-color: #0d0600 !important; }
-.dark .hover\:bg-gray-50:hover  { background-color: #2a1510 !important; }
-.dark .hover\:bg-gray-100:hover { background-color: #2e180e !important; }
+/* ── Backgrounds ── */
+.dark .bg-white          { background-color: #111111 !important; }
+.dark .bg-gray-50        { background-color: #0a0a0a !important; }
+.dark .bg-gray-100       { background-color: #1a1a1a !important; }
+.dark .bg-gray-200       { background-color: #222222 !important; }
+.dark .bg-\[\#f0f2f5\]  { background-color: #080808 !important; }
 
-/* Text */
-.dark .text-gray-900 { color: #f5ede6 !important; }
-.dark .text-gray-800 { color: #ead9cf !important; }
-.dark .text-gray-700 { color: #c9b5a8 !important; }
-.dark .text-gray-600 { color: #9e8070 !important; }
-.dark .text-gray-500 { color: #7a6055 !important; }
-.dark .text-gray-400 { color: #5a4840 !important; }
+/* brand-50 / brand-100 (blue tints) — keep dark in dark mode */
+.dark .bg-brand-50       { background-color: #1a1a1a !important; }
+.dark .bg-brand-100      { background-color: #222222 !important; }
 
-/* Borders */
-.dark .border   { border-color: #2e1a10 !important; }
-.dark .border-b { border-color: #2e1a10 !important; }
-.dark .border-r { border-color: #2e1a10 !important; }
-.dark .border-t { border-color: #2e1a10 !important; }
-.dark .border-gray-50  { border-color: #1e1008 !important; }
-.dark .border-gray-100 { border-color: #2a1510 !important; }
-.dark .border-gray-200 { border-color: #2e1a10 !important; }
+/* white/5 and white/10 are already correct (rgba-based, no override needed) */
 
-/* Inputs */
+/* Hover states */
+.dark .hover\:bg-gray-50:hover   { background-color: #1a1a1a !important; }
+.dark .hover\:bg-gray-100:hover  { background-color: #222222 !important; }
+.dark .hover\:bg-brand-50:hover  { background-color: #1a1a1a !important; }
+.dark .hover\:bg-brand-100:hover { background-color: #222222 !important; }
+
+/* ── Text ── */
+.dark .text-gray-900 { color: #f0f0f0 !important; }
+.dark .text-gray-800 { color: #e0e0e0 !important; }
+.dark .text-gray-700 { color: #c0c0c0 !important; }
+.dark .text-gray-600 { color: #909090 !important; }
+.dark .text-gray-500 { color: #707070 !important; }
+.dark .text-gray-400 { color: #505050 !important; }
+
+/* ── Borders ── */
+.dark .border        { border-color: #222222 !important; }
+.dark .border-b      { border-color: #222222 !important; }
+.dark .border-r      { border-color: #222222 !important; }
+.dark .border-t      { border-color: #222222 !important; }
+.dark .border-l      { border-color: #222222 !important; }
+.dark .border-gray-50  { border-color: #1a1a1a !important; }
+.dark .border-gray-100 { border-color: #222222 !important; }
+.dark .border-gray-200 { border-color: #2a2a2a !important; }
+
+/* ── Inputs ── */
 .dark input,
 .dark textarea,
 .dark select {
-  background-color: #2a1510 !important;
-  color: #f5ede6 !important;
-  border-color: #3e2318 !important;
+  background-color: #1a1a1a !important;
+  color: #f0f0f0 !important;
+  border-color: #333333 !important;
 }
 
 .dark input::placeholder,
 .dark textarea::placeholder {
-  color: #5a4840 !important;
+  color: #505050 !important;
 }
 
-/* Message bubbles — received side darkens, sent keeps brand orange */
-.dark .bg-white.shadow-sm {
-  background-color: #2a1510 !important;
-  color: #f5ede6 !important;
-}
-
-/* Conversation list search bar */
+/* pill search bar in ConversationList */
 .dark .bg-gray-100.rounded-full {
-  background-color: #2a1510 !important;
+  background-color: #1a1a1a !important;
 }
 
-/* Shadows */
-.dark .shadow-sm { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.5) !important; }
+/* ── Message bubbles ── */
+/* Received bubbles: dark card */
+.dark .bg-white.shadow-sm {
+  background-color: #1e1e1e !important;
+  color: #f0f0f0 !important;
+  border-color: #2a2a2a !important;
+}
+
+/* ── Shadows ── */
+.dark .shadow-sm  { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.6) !important; }
+.dark .shadow-md  { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.7) !important; }
+.dark .shadow-lg  { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.7) !important; }
+.dark .shadow-xl  { box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.8) !important; }
+
+/* ── Misc component overrides ── */
+/* Delete context menu / emoji picker popups */
+.dark .bg-white.rounded-xl,
+.dark .bg-white.rounded-full,
+.dark .bg-white.rounded-2xl,
+.dark .bg-white.rounded-3xl {
+  background-color: #1a1a1a !important;
+}
+
+/* Scrollbars in dark mode */
+.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #333333;
+}

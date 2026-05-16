@@ -87,8 +87,8 @@ function ReplyQuote({ replyTo, isMine }: { replyTo: ReplyPreview; isMine: boolea
     <div className={cn(
       'text-xs px-2 py-1 mb-1 rounded border-l-2 opacity-80',
       isMine
-        ? 'bg-brand-600/40 border-white/50 text-white'
-        : 'bg-gray-50 border-brand-400 text-gray-600',
+        ? 'bg-white/20 border-white/40 text-white'
+        : 'bg-gray-50 dark:bg-[#2a2a2a] border-blue-400 text-gray-600 dark:text-gray-300',
     )}>
       <CornerUpLeft size={10} className="inline mr-1 opacity-60" />
       <span className="truncate">{preview}</span>
@@ -313,8 +313,8 @@ export function MessageBubble({
         <div className={cn(
           'px-3 py-2 rounded-2xl',
           isMine
-            ? 'bg-brand-500 text-white rounded-br-sm shadow-sm'
-            : 'bg-white text-gray-900 rounded-bl-sm shadow-sm border border-gray-100',
+            ? 'bg-gradient-to-br from-blue-500 to-violet-500 text-white rounded-br-sm'
+            : 'bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-gray-100 rounded-bl-sm shadow-sm border border-gray-100 dark:border-[#2a2a2a]',
         )}>
           {replyTo && <ReplyQuote replyTo={replyTo} isMine={isMine} />}
           {renderContent()}

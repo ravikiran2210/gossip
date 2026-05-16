@@ -249,7 +249,7 @@ export function MessageInput({ conversationId }: MessageInputProps) {
           type="button"
           aria-label="Emoji picker"
           onClick={() => { setShowEmoji((v) => !v); setShowGif(false); }}
-          className="p-2 text-gray-400 hover:text-brand-500 rounded-lg hover:bg-gray-100 transition-colors flex-shrink-0"
+          className="p-2 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors flex-shrink-0"
         >
           <Smile size={20} />
         </button>
@@ -258,7 +258,7 @@ export function MessageInput({ conversationId }: MessageInputProps) {
           type="button"
           aria-label="GIF picker"
           onClick={() => { setShowGif((v) => !v); setShowEmoji(false); }}
-          className="p-2 text-gray-400 hover:text-brand-500 rounded-lg hover:bg-gray-100 transition-colors flex-shrink-0 text-xs font-bold leading-none"
+          className="p-2 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors flex-shrink-0 text-xs font-bold leading-none"
         >
           GIF
         </button>
@@ -268,7 +268,7 @@ export function MessageInput({ conversationId }: MessageInputProps) {
           aria-label="Attach file"
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
-          className="p-2 text-gray-400 hover:text-brand-500 rounded-lg hover:bg-gray-100 transition-colors flex-shrink-0"
+          className="p-2 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors flex-shrink-0"
         >
           <Paperclip size={20} />
         </button>
@@ -290,7 +290,7 @@ export function MessageInput({ conversationId }: MessageInputProps) {
           placeholder={pending ? 'Add a caption… (optional)' : 'Type a message…'}
           aria-label="Message input"
           rows={1}
-          className="flex-1 resize-none border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 max-h-32 overflow-y-auto min-h-[40px]"
+          className="flex-1 resize-none border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 max-h-32 overflow-y-auto min-h-[40px]"
         />
 
         <Button
@@ -298,7 +298,7 @@ export function MessageInput({ conversationId }: MessageInputProps) {
           onClick={handleSend}
           disabled={(!text.trim() && !pending) || isUploading}
           size="sm"
-          className="flex-shrink-0 rounded-xl"
+          className="flex-shrink-0 rounded-xl bg-gradient-to-br from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600 border-0"
           isLoading={isUploading}
           aria-label="Send message"
         >

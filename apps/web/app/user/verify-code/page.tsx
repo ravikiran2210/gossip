@@ -45,31 +45,29 @@ export default function VerifyCodePage() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Brand panel — hidden on mobile */}
-      <div className="hidden md:flex w-[420px] flex-shrink-0 bg-gradient-to-br from-brand-900 via-brand-700 to-brand-500 flex-col items-center justify-center px-10 text-center relative overflow-hidden">
-        <div className="absolute top-[-60px] right-[-60px] w-48 h-48 bg-white/10 rounded-full blur-2xl" />
-        <div className="absolute bottom-[-40px] left-[-40px] w-40 h-40 bg-brand-300/20 rounded-full blur-xl" />
+      {/* Brand panel */}
+      <div className="hidden md:flex w-[400px] flex-shrink-0 bg-black flex-col items-center justify-center px-10 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-violet-500/5" />
         <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-2xl mb-4 z-10">
-          <MessageSquare className="text-brand-500" size={32} />
+          <MessageSquare className="text-gray-900" size={32} />
         </div>
         <h2 className="text-3xl font-black text-white z-10">Gossip</h2>
-        <p className="text-brand-100 text-sm mt-2 z-10">Connect with people who matter</p>
+        <p className="text-gray-500 text-sm mt-2 z-10">Connect with people who matter</p>
       </div>
 
       {/* Form panel */}
-      <div className="flex-1 bg-gray-50 flex items-center justify-center p-6">
-        <div className="bg-white rounded-3xl shadow-xl p-8 w-full max-w-sm">
-          {/* Mobile logo */}
+      <div className="flex-1 bg-white flex items-center justify-center p-6">
+        <div className="bg-white rounded-3xl border border-gray-100 shadow-xl p-8 w-full max-w-sm">
           <div className="flex md:hidden items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-brand-100 rounded-xl flex items-center justify-center">
-              <MessageSquare className="text-brand-500" size={20} />
+            <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+              <MessageSquare className="text-gray-700" size={20} />
             </div>
-            <span className="text-xl font-black text-brand-600">Gossip</span>
+            <span className="text-xl font-black text-gray-900">Gossip</span>
           </div>
 
           <div className="flex items-center gap-3 mb-7">
-            <div className="w-11 h-11 bg-brand-100 rounded-2xl flex items-center justify-center">
-              <Key className="text-brand-500" size={20} />
+            <div className="w-11 h-11 bg-blue-50 rounded-2xl flex items-center justify-center">
+              <Key className="text-blue-500" size={20} />
             </div>
             <div>
               <h1 className="text-lg font-bold text-gray-900">Enter Access Code</h1>
@@ -91,9 +89,9 @@ export default function VerifyCodePage() {
             </Button>
           </form>
 
-          <div className="mt-5 flex items-center justify-between text-sm">
+          <div className="mt-5 flex items-center justify-between">
             <Link href="/" className="text-gray-400 hover:text-gray-600 text-xs">← Back</Link>
-            <Link href="/user/request" className="text-brand-500 hover:text-brand-600 text-xs font-medium">Request access →</Link>
+            <Link href="/user/request" className="text-blue-500 hover:text-blue-600 text-xs font-medium">Request access →</Link>
           </div>
         </div>
       </div>

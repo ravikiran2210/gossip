@@ -33,9 +33,9 @@ export default function UserRequestPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-brand-900 via-brand-700 to-brand-400 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-black flex items-center justify-center p-6">
         <div className="bg-white rounded-3xl shadow-2xl p-10 w-full max-w-sm text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="text-green-500" size={32} />
           </div>
           <h2 className="text-xl font-bold text-gray-900 mb-2">Request Sent!</h2>
@@ -44,7 +44,7 @@ export default function UserRequestPage() {
           </p>
           <Link
             href="/user/verify-code"
-            className="block bg-brand-500 hover:bg-brand-600 text-white font-bold px-6 py-3 rounded-2xl transition-colors text-sm"
+            className="block bg-gray-900 hover:bg-black text-white font-bold px-6 py-3 rounded-2xl transition-colors text-sm"
           >
             Already have a code? Enter it →
           </Link>
@@ -57,30 +57,28 @@ export default function UserRequestPage() {
   return (
     <div className="min-h-screen flex">
       {/* Brand panel */}
-      <div className="hidden md:flex w-[420px] flex-shrink-0 bg-gradient-to-br from-brand-900 via-brand-700 to-brand-500 flex-col items-center justify-center px-10 text-center relative overflow-hidden">
-        <div className="absolute top-[-60px] right-[-60px] w-48 h-48 bg-white/10 rounded-full blur-2xl" />
-        <div className="absolute bottom-[-40px] left-[-40px] w-40 h-40 bg-brand-300/20 rounded-full blur-xl" />
+      <div className="hidden md:flex w-[400px] flex-shrink-0 bg-black flex-col items-center justify-center px-10 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-violet-500/5" />
         <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-2xl mb-4 z-10">
-          <MessageSquare className="text-brand-500" size={32} />
+          <MessageSquare className="text-gray-900" size={32} />
         </div>
         <h2 className="text-3xl font-black text-white z-10">Join Gossip</h2>
-        <p className="text-brand-100 text-sm mt-2 z-10">An invite-only conversation platform</p>
+        <p className="text-gray-500 text-sm mt-2 z-10">An invite-only conversation platform</p>
       </div>
 
       {/* Form panel */}
-      <div className="flex-1 bg-gray-50 flex items-center justify-center p-6">
-        <div className="bg-white rounded-3xl shadow-xl p-8 w-full max-w-sm">
-          {/* Mobile logo */}
+      <div className="flex-1 bg-white flex items-center justify-center p-6">
+        <div className="bg-white rounded-3xl border border-gray-100 shadow-xl p-8 w-full max-w-sm">
           <div className="flex md:hidden items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-brand-100 rounded-xl flex items-center justify-center">
-              <MessageSquare className="text-brand-500" size={20} />
+            <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+              <MessageSquare className="text-gray-700" size={20} />
             </div>
-            <span className="text-xl font-black text-brand-600">Gossip</span>
+            <span className="text-xl font-black text-gray-900">Gossip</span>
           </div>
 
           <div className="flex items-center gap-3 mb-7">
-            <div className="w-11 h-11 bg-brand-100 rounded-2xl flex items-center justify-center">
-              <Send className="text-brand-500" size={20} />
+            <div className="w-11 h-11 bg-blue-50 rounded-2xl flex items-center justify-center">
+              <Send className="text-blue-500" size={20} />
             </div>
             <div>
               <h1 className="text-lg font-bold text-gray-900">Request Access</h1>
@@ -98,7 +96,7 @@ export default function UserRequestPage() {
                 {...register('message')}
                 rows={3}
                 placeholder="Tell us a bit about yourself…"
-                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none"
+                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               />
             </div>
             <Button type="submit" isLoading={isSubmitting} className="w-full">
@@ -108,7 +106,7 @@ export default function UserRequestPage() {
 
           <div className="mt-5 flex items-center justify-between">
             <Link href="/" className="text-gray-400 hover:text-gray-600 text-xs">← Back</Link>
-            <Link href="/user/verify-code" className="text-brand-500 hover:text-brand-600 text-xs font-medium">Have a code? →</Link>
+            <Link href="/user/verify-code" className="text-blue-500 hover:text-blue-600 text-xs font-medium">Have a code? →</Link>
           </div>
         </div>
       </div>
