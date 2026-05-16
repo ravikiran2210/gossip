@@ -176,7 +176,21 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       });
 
       const messageId = message._id.toString();
-      const msgPayload = message.toObject ? message.toObject() : message;
+      // Explicitly convert all ObjectId fields to plain strings so the client
+      // store can match them against URL-param strings without type mismatches.
+      const raw = message.toObject ? message.toObject() : { ...message };
+      const msgPayload = {
+        ...raw,
+        _id: messageId,
+        conversationId: raw.conversationId?.toString() ?? data.conversationId,
+        senderId: raw.senderId?.toString() ?? senderId,
+        mediaId: raw.mediaId?.toString(),
+        replyToId: raw.replyToId?.toString(),
+        reactions: (raw.reactions ?? []).map((r: any) => ({
+          ...r,
+          userId: r.userId?.toString(),
+        })),
+      };
 
       // Ack to sender and broadcast to room immediately — don't wait for receipt writes
       client.emit(EVENTS.MESSAGE_SENT, { messageId: data.messageId, _id: messageId });

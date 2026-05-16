@@ -37,10 +37,10 @@ interface MessageBubbleProps {
 }
 
 function StatusIcon({ status }: { status?: string }) {
-  if (status === 'sending') return <Clock size={12} className="text-gray-400" />;
-  if (status === 'delivered') return <CheckCheck size={12} className="text-gray-400" />;
-  if (status === 'read') return <CheckCheck size={12} className="text-brand-500" />;
-  return <Check size={12} className="text-gray-400" />;
+  if (status === 'sending') return <Clock size={11} className="opacity-60" />;
+  if (status === 'delivered') return <CheckCheck size={11} className="opacity-70" />;
+  if (status === 'read') return <CheckCheck size={11} className="text-sky-300" />;
+  return <Check size={11} className="opacity-60" />;
 }
 
 function ReactionBar({ reactions, currentUserId }: { reactions: MessageReaction[]; currentUserId?: string }) {
@@ -62,7 +62,7 @@ function ReactionBar({ reactions, currentUserId }: { reactions: MessageReaction[
           className={cn(
             'inline-flex items-center gap-0.5 text-xs px-1.5 py-0.5 rounded-full border',
             mine
-              ? 'bg-brand-50 border-brand-300 text-brand-700'
+              ? 'bg-gradient-to-r from-pink-100 to-orange-100 border-pink-300 text-pink-700'
               : 'bg-gray-100 border-gray-200 text-gray-700',
           )}
         >
@@ -87,8 +87,8 @@ function ReplyQuote({ replyTo, isMine }: { replyTo: ReplyPreview; isMine: boolea
     <div className={cn(
       'text-xs px-2 py-1 mb-1 rounded border-l-2 opacity-80',
       isMine
-        ? 'bg-brand-700 border-brand-300 text-brand-100'
-        : 'bg-gray-50 border-brand-400 text-gray-600',
+        ? 'bg-white/20 border-white/60 text-white'
+        : 'bg-gray-50 border-pink-400 text-gray-600',
     )}>
       <CornerUpLeft size={10} className="inline mr-1 opacity-60" />
       <span className="truncate">{preview}</span>
@@ -153,14 +153,12 @@ export function MessageBubble({
 
   if (message.deletedForEveryone) {
     return (
-      <div className={cn('flex mb-2', isMine ? 'justify-end' : 'justify-start')}>
-        <div className="max-w-[75%]">
-          <div className={cn(
-            'px-3 py-2 rounded-2xl italic text-xs opacity-60',
-            isMine ? 'bg-brand-600 text-white rounded-br-sm' : 'bg-white text-gray-500 rounded-bl-sm shadow-sm border border-gray-100',
-          )}>
-            🚫 This message was deleted
-          </div>
+      <div className={cn('flex mb-1', isMine ? 'justify-end' : 'justify-start')}>
+        <div className={cn(
+          'px-3 py-1.5 rounded-2xl italic text-xs opacity-50 border',
+          isMine ? 'border-white/20 text-white bg-white/10' : 'border-gray-200 text-gray-400 bg-gray-50',
+        )}>
+          🚫 This message was deleted
         </div>
       </div>
     );
@@ -226,7 +224,7 @@ export function MessageBubble({
     <div className={cn('flex mb-2', isMine ? 'justify-end' : 'justify-start')}>
       <div className={cn('max-w-[75%] group relative')} ref={menuRef}>
         {!isMine && senderName && (
-          <p className="text-xs text-brand-600 font-medium mb-1 ml-1">{senderName}</p>
+          <p className="text-xs font-semibold mb-1 ml-1 bg-gradient-to-r from-pink-500 to-orange-400 bg-clip-text text-transparent">{senderName}</p>
         )}
 
         {/* Hover action bar */}
@@ -239,7 +237,7 @@ export function MessageBubble({
               type="button"
               aria-label="Reply"
               onClick={() => onReply(message)}
-              className="p-1 rounded-full bg-white shadow border border-gray-100 text-gray-500 hover:text-brand-500"
+              className="p-1 rounded-full bg-white shadow border border-gray-100 text-gray-500 hover:text-pink-500"
             >
               <Reply size={13} />
             </button>
@@ -249,7 +247,7 @@ export function MessageBubble({
               type="button"
               aria-label="React"
               onClick={() => setShowReactPicker((v) => !v)}
-              className="p-1 rounded-full bg-white shadow border border-gray-100 text-gray-500 hover:text-brand-500"
+              className="p-1 rounded-full bg-white shadow border border-gray-100 text-gray-500 hover:text-pink-500"
             >
               <Smile size={13} />
             </button>
@@ -315,7 +313,7 @@ export function MessageBubble({
         <div className={cn(
           'px-3 py-2 rounded-2xl',
           isMine
-            ? 'bg-brand-600 text-white rounded-br-sm'
+            ? 'bg-gradient-to-br from-pink-500 to-orange-400 text-white rounded-br-sm shadow-md'
             : 'bg-white text-gray-900 rounded-bl-sm shadow-sm border border-gray-100',
         )}>
           {replyTo && <ReplyQuote replyTo={replyTo} isMine={isMine} />}

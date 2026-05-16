@@ -22,6 +22,7 @@ export default function ConversationPage() {
   const { user, token } = useAuthStore();
   const {
     messages,
+    conversations,
     loadMessages,
     setActiveConversation,
     typingUsers,
@@ -31,6 +32,10 @@ export default function ConversationPage() {
     markConversationRead,
   } = useChatStore();
   const [conversation, setConversation] = useState<Conversation | null>(null);
+  // Use the store's already-loaded conversation as an immediate fallback so the
+  // header never shows "Chat" while the detail API call is in-flight.
+  const storeConv = conversations.find((c) => c._id === conversationId) ?? null;
+  const activeConv = conversation ?? storeConv;
   const [showInfo, setShowInfo] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -138,8 +143,8 @@ export default function ConversationPage() {
   const typing = typingUsers[conversationId] || [];
 
   const senderNames: Record<string, string> = {};
-  if (conversation?.members) {
-    for (const m of conversation.members) {
+  if (activeConv?.members) {
+    for (const m of activeConv.members) {
       const u = m.userId as any;
       const uid = typeof u === 'object' ? u._id?.toString() : u?.toString();
       if (uid) senderNames[uid] = u?.name || u?.username || uid;
@@ -147,18 +152,18 @@ export default function ConversationPage() {
   }
 
   const getConvName = () => {
-    if (!conversation) return 'Chat';
-    if (conversation.type === 'group') return conversation.title || 'Group';
-    return conversation.otherUser?.name || conversation.otherUser?.username || 'Direct Chat';
+    if (!activeConv) return '';
+    if (activeConv.type === 'group') return activeConv.title || 'Group';
+    return activeConv.otherUser?.name || activeConv.otherUser?.username || 'Direct Chat';
   };
 
-  const otherUserId = conversation?.type === 'direct' ? conversation.otherUser?._id : undefined;
+  const otherUserId = activeConv?.type === 'direct' ? activeConv.otherUser?._id : undefined;
   const otherOnline = otherUserId ? (onlineUsers[otherUserId]?.isOnline ?? false) : false;
   const lastSeen = otherUserId ? onlineUsers[otherUserId]?.lastSeenAt : undefined;
 
   const getSubtitle = () => {
-    if (conversation?.type === 'group') {
-      return `${conversation.members?.length ?? 0} members`;
+    if (activeConv?.type === 'group') {
+      return `${activeConv.members?.length ?? 0} members`;
     }
     if (otherOnline) return 'Online';
     if (lastSeen) {
@@ -186,7 +191,7 @@ export default function ConversationPage() {
     <AppLayout>
       <ConversationList className="hidden md:flex md:w-80 flex-shrink-0" />
       <div className="flex-1 flex min-w-0 min-h-0 relative">
-        <div className="flex-1 flex flex-col bg-gray-50 min-w-0 min-h-0">
+        <div className="flex-1 flex flex-col bg-[#f0f2f5] min-w-0 min-h-0">
           {/* Header */}
           <div className="bg-white border-b px-4 py-3 flex items-center gap-3 shadow-sm">
             <button
@@ -199,12 +204,16 @@ export default function ConversationPage() {
             </button>
             <Avatar
               name={getConvName()}
-              avatarUrl={conversation?.type === 'direct' ? conversation?.otherUser?.avatarUrl : conversation?.avatarUrl}
+              avatarUrl={activeConv?.type === 'direct' ? activeConv?.otherUser?.avatarUrl : activeConv?.avatarUrl}
               size="sm"
               isOnline={otherOnline}
             />
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-gray-900 truncate">{getConvName()}</p>
+              {getConvName() ? (
+                <p className="font-semibold text-gray-900 truncate">{getConvName()}</p>
+              ) : (
+                <div className="h-4 w-28 bg-gray-200 rounded animate-pulse" />
+              )}
               {getSubtitle() && (
                 <p className={`text-xs truncate ${otherOnline ? 'text-green-500' : 'text-gray-400'}`}>
                   {getSubtitle()}
@@ -274,7 +283,7 @@ export default function ConversationPage() {
                 message={msg}
                 isMine={msg.senderId === user?._id}
                 currentUserId={user?._id}
-                senderName={conversation?.type === 'group' ? (senderNames[msg.senderId] || msg.senderId) : undefined}
+                senderName={activeConv?.type === 'group' ? (senderNames[msg.senderId] || msg.senderId) : undefined}
                 onReply={handleReply}
                 onReact={handleReact}
                 onDelete={handleDelete}
@@ -291,12 +300,12 @@ export default function ConversationPage() {
         </div>
 
         {/* Group info panel — overlay on mobile, sidebar on desktop */}
-        {showInfo && conversation && (
+        {showInfo && activeConv && (
           <>
             <div className="absolute inset-0 z-40 bg-black/20 md:hidden" onClick={() => setShowInfo(false)} />
             <div className="absolute right-0 top-0 bottom-0 z-50 md:relative md:inset-auto md:z-auto shadow-xl md:shadow-none">
               <GroupInfoPanel
-                conversation={conversation}
+                conversation={activeConv}
                 currentUserId={user?._id || ''}
                 onClose={() => setShowInfo(false)}
                 onConversationUpdate={setConversation}
