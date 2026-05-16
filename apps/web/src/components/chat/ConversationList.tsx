@@ -1,18 +1,20 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useChatStore } from '@/stores/chat.store';
 import { Avatar } from '@/components/ui/Avatar';
 import { formatConversationTime } from '@/utils';
 import { cn } from '@/utils';
-import { Search, Plus, Pin } from 'lucide-react';
+import { Search, SquarePen, Pin } from 'lucide-react';
+import { UserSearchModal } from '@/features/chat/UserSearchModal';
 import type { Conversation } from '@/types';
 
 export function ConversationList({ className }: { className?: string }) {
   const pathname = usePathname();
   const { conversations, loadConversations, isLoadingConversations, onlineUsers, pinConversation } = useChatStore();
   const [search, setSearch] = useState('');
+  const [showNewChat, setShowNewChat] = useState(false);
 
   useEffect(() => {
     loadConversations();
@@ -45,9 +47,14 @@ export function ConversationList({ className }: { className?: string }) {
       <div className="p-4 border-b">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold text-gray-900">Messages</h2>
-          <Link href="/app/groups/create" className="p-1.5 text-brand-600 hover:bg-brand-50 rounded-lg" aria-label="New group">
-            <Plus size={20} />
-          </Link>
+          <button
+            type="button"
+            aria-label="New chat"
+            onClick={() => setShowNewChat(true)}
+            className="p-1.5 text-brand-600 hover:bg-brand-50 rounded-lg transition-colors"
+          >
+            <SquarePen size={20} />
+          </button>
         </div>
         <div className="relative">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -67,7 +74,15 @@ export function ConversationList({ className }: { className?: string }) {
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-32 text-gray-400 text-sm gap-2">
             <p>{search ? 'No results' : 'No conversations yet'}</p>
-            {!search && <p className="text-xs">Search for a user to start chatting</p>}
+            {!search && (
+              <button
+                type="button"
+                onClick={() => setShowNewChat(true)}
+                className="text-xs text-brand-600 hover:underline"
+              >
+                Start a new chat
+              </button>
+            )}
           </div>
         ) : (
           filtered.map((conv) => {
@@ -132,6 +147,8 @@ export function ConversationList({ className }: { className?: string }) {
           })
         )}
       </div>
+
+      <UserSearchModal isOpen={showNewChat} onClose={() => setShowNewChat(false)} />
     </div>
   );
 }

@@ -11,7 +11,6 @@ import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { MessagesService } from '../messages/messages.service';
-import { ConversationsService } from '../conversations/conversations.service';
 import { UsersService } from '../users/users.service';
 import { ConnectionRegistry } from './connection-registry';
 
@@ -39,7 +38,7 @@ const EVENTS = {
     origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
     credentials: true,
   },
-  transports: ['websocket', 'polling'],
+  transports: ['websocket'],
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
@@ -50,7 +49,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private readonly jwtService: JwtService,
     private readonly messagesService: MessagesService,
-    private readonly conversationsService: ConversationsService,
     private readonly usersService: UsersService,
     private readonly registry: ConnectionRegistry,
   ) {}
@@ -177,29 +175,30 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         replyToId: data.replyToId,
       });
 
-      // Ack to sender
-      client.emit(EVENTS.MESSAGE_SENT, { messageId: data.messageId, _id: message._id });
+      const messageId = message._id.toString();
+      const msgPayload = message.toObject ? message.toObject() : message;
 
-      // Broadcast to all members in conversation room (including sender for other tabs)
-      this.server.to(`conv:${data.conversationId}`).emit(EVENTS.MESSAGE_NEW, {
-        ...(message.toObject ? message.toObject() : message),
-      });
+      // Ack to sender and broadcast to room immediately — don't wait for receipt writes
+      client.emit(EVENTS.MESSAGE_SENT, { messageId: data.messageId, _id: messageId });
+      this.server.to(`conv:${data.conversationId}`).emit(EVENTS.MESSAGE_NEW, msgPayload);
 
-      // Mark as delivered for any online receivers already in the room
-      const receivers = await this.messagesService.getConversationReceivers(
-        data.conversationId,
-        senderId,
-      );
-      for (const receiverId of receivers) {
-        const sockets = this.registry.getSocketIds(receiverId);
-        if (sockets.length > 0) {
-          await this.messagesService.markDelivered(message._id.toString(), receiverId);
-          this.server.to(`conv:${data.conversationId}`).emit(EVENTS.MESSAGE_DELIVERED, {
-            messageId: message._id.toString(),
-            userId: receiverId,
-          });
-        }
-      }
+      // Mark delivered for online receivers in the background — fire and forget
+      this.messagesService
+        .getConversationReceivers(data.conversationId, senderId)
+        .then((receivers) => {
+          const deliverPromises = receivers
+            .filter((receiverId) => this.registry.getSocketIds(receiverId).length > 0)
+            .map((receiverId) =>
+              this.messagesService.markDelivered(messageId, receiverId).then(() => {
+                this.server.to(`conv:${data.conversationId}`).emit(EVENTS.MESSAGE_DELIVERED, {
+                  messageId,
+                  userId: receiverId,
+                });
+              }),
+            );
+          return Promise.all(deliverPromises);
+        })
+        .catch((err) => this.logger.error('Delivery receipt error', err));
     } catch (err: unknown) {
       this.logger.error('Message send error', err);
       const msg = err instanceof Error ? err.message : 'Failed to send message';

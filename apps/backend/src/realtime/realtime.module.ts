@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MessagesModule } from '../messages/messages.module';
-import { ConversationsModule } from '../conversations/conversations.module';
 import { ReceiptsModule } from '../receipts/receipts.module';
 import { UsersModule } from '../users/users.module';
 import { ChatGateway } from './chat.gateway';
@@ -18,7 +17,6 @@ import { ConnectionRegistry } from './connection-registry';
       inject: [ConfigService],
     }),
     MessagesModule,
-    ConversationsModule,
     ReceiptsModule,
     UsersModule,
   ],

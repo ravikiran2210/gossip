@@ -9,8 +9,13 @@ export function getSocket(): Socket {
     const token = typeof window !== 'undefined' ? localStorage.getItem('userToken') : null;
     socket = io(SOCKET_URL, {
       auth: { token },
-      transports: ['websocket', 'polling'],
+      // Force WebSocket — polling degrades to one HTTP request per ~25s and is
+      // far slower. If WebSocket fails, Socket.IO will reconnect via WebSocket
+      // rather than silently falling back to polling.
+      transports: ['websocket'],
       autoConnect: false,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
     });
   }
   return socket;

@@ -27,10 +27,13 @@ export class MessagesService {
   ) {}
 
   async send(dto: SendMessageDto) {
-    const isMember = await this.conversationsService.isActiveMember(dto.conversationId, dto.senderId);
-    if (!isMember) throw new ForbiddenException('Not an active member of this conversation');
+    // Run the two read-only checks in parallel — saves one full DB round-trip
+    const [isMember, existing] = await Promise.all([
+      this.conversationsService.isActiveMember(dto.conversationId, dto.senderId),
+      this.messageModel.findOne({ messageId: dto.messageId }),
+    ]);
 
-    const existing = await this.messageModel.findOne({ messageId: dto.messageId });
+    if (!isMember) throw new ForbiddenException('Not an active member of this conversation');
     if (existing) return existing;
 
     const message = await this.messageModel.create({
@@ -44,6 +47,8 @@ export class MessagesService {
       replyToId: dto.replyToId ? new Types.ObjectId(dto.replyToId) : undefined,
     });
 
+    // Fire both side-effect writes in parallel without blocking the caller —
+    // the message is already saved; these are housekeeping updates.
     const preview = dto.messageType === 'text'
       ? dto.encryptedPayload.substring(0, 80)
       : dto.messageType === 'image' ? '📷 Photo'
@@ -52,22 +57,22 @@ export class MessagesService {
       : dto.messageType === 'gif' ? '🎞 GIF'
       : `📎 ${dto.fileName || 'File'}`;
 
-    await this.conversationsService.updateLastMessage(
-      dto.conversationId,
-      message._id.toString(),
-      message['createdAt'] || new Date(),
-      preview,
-    );
-
-    // Increment unread count for all members except sender
-    await this.memberModel.updateMany(
-      {
-        conversationId: new Types.ObjectId(dto.conversationId),
-        userId: { $ne: new Types.ObjectId(dto.senderId) },
-        status: 'active',
-      },
-      { $inc: { unreadCount: 1 } },
-    );
+    Promise.all([
+      this.conversationsService.updateLastMessage(
+        dto.conversationId,
+        message._id.toString(),
+        message['createdAt'] || new Date(),
+        preview,
+      ),
+      this.memberModel.updateMany(
+        {
+          conversationId: new Types.ObjectId(dto.conversationId),
+          userId: { $ne: new Types.ObjectId(dto.senderId) },
+          status: 'active',
+        },
+        { $inc: { unreadCount: 1 } },
+      ),
+    ]).catch(() => { /* non-critical — message is already saved */ });
 
     return message;
   }

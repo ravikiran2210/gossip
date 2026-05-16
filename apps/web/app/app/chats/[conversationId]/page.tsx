@@ -27,7 +27,6 @@ export default function ConversationPage() {
     typingUsers,
     onlineUsers,
     setReplyingTo,
-    updateMessageReactions,
     deleteMessage,
     markConversationRead,
   } = useChatStore();
@@ -79,7 +78,12 @@ export default function ConversationPage() {
     const msgs = messages[conversationId];
     if (!msgs?.length) return;
 
-    markConversationRead(conversationId);
+    // Only mark read on the initial load and when new messages arrive — not on
+    // every status/reaction update (same count). This avoids an HTTP POST on
+    // every delivered/read tick.
+    if (prevMsgCountRef.current === 0 || msgs.length > prevMsgCountRef.current) {
+      markConversationRead(conversationId);
+    }
 
     const prevCount = prevMsgCountRef.current;
     const newCount = msgs.length;
@@ -266,7 +270,7 @@ export default function ConversationPage() {
             )}
             {displayMessages.map((msg) => (
               <MessageBubble
-                key={msg._id || msg.messageId}
+                key={msg.messageId || msg._id}
                 message={msg}
                 isMine={msg.senderId === user?._id}
                 currentUserId={user?._id}

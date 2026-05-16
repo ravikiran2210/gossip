@@ -17,6 +17,15 @@ export function useSocket() {
   useEffect(() => {
     const socket = getSocket();
 
+    // On reconnect, rejoin the active conversation room so messages don't get
+    // missed during the brief disconnection window.
+    socket.on('connect', () => {
+      const { activeConversationId } = useChatStore.getState();
+      if (activeConversationId) {
+        socket.emit('conversation.join', { conversationId: activeConversationId });
+      }
+    });
+
     socket.on('message.new', (msg: Message) => {
       addMessage({ ...msg, status: 'delivered' });
 
@@ -82,6 +91,7 @@ export function useSocket() {
     socket.on('conversation.updated', (conv: any) => upsertConv(conv));
 
     return () => {
+      socket.off('connect');
       socket.off('message.new');
       socket.off('message.sent');
       socket.off('message.delivered');
