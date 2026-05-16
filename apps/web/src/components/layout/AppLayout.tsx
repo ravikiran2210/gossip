@@ -19,54 +19,89 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     router.replace('/');
   };
 
-  // Hide the bottom nav when the user is inside a specific conversation so
-  // the message input is the only bottom-anchored element (like WhatsApp).
   const isInConversation = /^\/app\/chats\/.+/.test(pathname);
+
+  const navItems = [
+    { href: '/app/chats', icon: MessageSquare, label: 'Chats' },
+    { href: '/app/groups/create', icon: Plus, label: 'New Group' },
+    { href: '/app/settings', icon: Settings, label: 'Settings' },
+  ];
 
   return (
     <div className="flex flex-col md:flex-row h-[100dvh] bg-gray-100">
-      {/* Desktop left sidebar — hidden on mobile */}
-      <aside className="hidden md:flex w-16 bg-white border-r flex-col items-center py-3 gap-4 flex-shrink-0">
-        <Link href="/app/chats" className={cn('p-2.5 rounded-xl transition-colors', pathname.startsWith('/app/chats') ? 'bg-brand-100 text-brand-700' : 'text-gray-500 hover:bg-gray-100')}>
-          <MessageSquare size={22} />
-        </Link>
-        <Link href="/app/groups/create" className="p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 transition-colors">
-          <Plus size={22} />
-        </Link>
+      {/* Desktop left sidebar */}
+      <aside className="hidden md:flex w-16 bg-white border-r flex-col items-center py-4 gap-2 flex-shrink-0 shadow-sm">
+        {navItems.map(({ href, icon: Icon, label }) => {
+          const active = href === '/app/chats' ? pathname.startsWith('/app/chats') : pathname === href;
+          return (
+            <Link
+              key={href}
+              href={href}
+              title={label}
+              className={cn(
+                'w-10 h-10 flex items-center justify-center rounded-2xl transition-all',
+                active
+                  ? 'bg-brand-500 text-white shadow-md shadow-brand-500/30'
+                  : 'text-gray-400 hover:bg-brand-50 hover:text-brand-500',
+              )}
+            >
+              <Icon size={20} />
+            </Link>
+          );
+        })}
+
         <div className="flex-1" />
-        <Link href="/app/settings" className={cn('p-2.5 rounded-xl transition-colors', pathname === '/app/settings' ? 'bg-brand-100 text-brand-700' : 'text-gray-500 hover:bg-gray-100')}>
-          <Settings size={22} />
-        </Link>
-        <Link href="/app/profile">
+
+        <Link href="/app/profile" title="Profile">
           {user && <Avatar name={user.name} avatarUrl={user.avatarUrl} size="sm" />}
         </Link>
-        <button type="button" aria-label="Sign out" onClick={handleLogout} className="p-2.5 rounded-xl text-red-400 hover:bg-red-50 transition-colors">
-          <LogOut size={22} />
+        <button
+          type="button"
+          title="Sign out"
+          aria-label="Sign out"
+          onClick={handleLogout}
+          className="w-10 h-10 flex items-center justify-center rounded-2xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all"
+        >
+          <LogOut size={20} />
         </button>
       </aside>
 
-      {/* Content area */}
+      {/* Content */}
       <div className="flex-1 flex overflow-hidden min-h-0">
         {children}
       </div>
 
-      {/* Mobile bottom nav — hidden on desktop, hidden inside conversations */}
-      <nav className={`md:hidden flex-shrink-0 h-14 bg-white border-t flex items-center justify-around px-2 z-50 ${isInConversation ? 'hidden' : ''}`}>
-        <Link href="/app/chats" className={cn('p-2.5 rounded-xl transition-colors', pathname.startsWith('/app/chats') ? 'text-brand-600' : 'text-gray-500')}>
-          <MessageSquare size={22} />
+      {/* Mobile bottom nav */}
+      <nav className={cn(
+        'md:hidden flex-shrink-0 bg-white border-t flex items-center justify-around px-3 z-50 pb-safe',
+        isInConversation ? 'hidden' : 'h-16',
+      )}>
+        {navItems.map(({ href, icon: Icon, label }) => {
+          const active = href === '/app/chats' ? pathname.startsWith('/app/chats') : pathname === href;
+          return (
+            <Link
+              key={href}
+              href={href}
+              className="flex flex-col items-center gap-1 relative px-3 py-1"
+            >
+              <div className={cn(
+                'w-10 h-10 flex items-center justify-center rounded-2xl transition-all',
+                active ? 'bg-brand-500 text-white shadow-md shadow-brand-500/20' : 'text-gray-400',
+              )}>
+                <Icon size={20} />
+              </div>
+              <span className={cn('text-[10px] font-medium', active ? 'text-brand-500' : 'text-gray-400')}>
+                {label}
+              </span>
+            </Link>
+          );
+        })}
+        <Link href="/app/profile" className="flex flex-col items-center gap-1 px-3 py-1">
+          <div className="w-10 h-10 flex items-center justify-center">
+            {user && <Avatar name={user.name} avatarUrl={user.avatarUrl} size="sm" />}
+          </div>
+          <span className="text-[10px] font-medium text-gray-400">Profile</span>
         </Link>
-        <Link href="/app/groups/create" className={cn('p-2.5 rounded-xl transition-colors', pathname === '/app/groups/create' ? 'text-brand-600' : 'text-gray-500')}>
-          <Plus size={22} />
-        </Link>
-        <Link href="/app/settings" className={cn('p-2.5 rounded-xl transition-colors', pathname === '/app/settings' ? 'text-brand-600' : 'text-gray-500')}>
-          <Settings size={22} />
-        </Link>
-        <Link href="/app/profile">
-          {user && <Avatar name={user.name} avatarUrl={user.avatarUrl} size="sm" />}
-        </Link>
-        <button type="button" aria-label="Sign out" onClick={handleLogout} className="p-2.5 rounded-xl text-red-400">
-          <LogOut size={22} />
-        </button>
       </nav>
     </div>
   );

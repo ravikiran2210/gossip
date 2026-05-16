@@ -193,7 +193,7 @@ export default function ConversationPage() {
       <div className="flex-1 flex min-w-0 min-h-0 relative">
         <div className="flex-1 flex flex-col bg-[#f0f2f5] min-w-0 min-h-0">
           {/* Header */}
-          <div className="bg-white border-b px-4 py-3 flex items-center gap-3 shadow-sm">
+          <div className="bg-white border-b px-4 py-3 flex items-center gap-3 shadow-sm z-10">
             <button
               type="button"
               aria-label="Back to chats"

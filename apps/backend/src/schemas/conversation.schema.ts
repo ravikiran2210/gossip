@@ -31,6 +31,6 @@ export class Conversation {
 }
 
 export const ConversationSchema = SchemaFactory.createForClass(Conversation);
-ConversationSchema.index({ directKey: 1 }, { unique: true, sparse: true });
+// directKey unique+sparse index is already created by @Prop({ sparse: true, unique: true }) above
 ConversationSchema.index({ createdById: 1 });
 ConversationSchema.index({ lastMessageAt: -1 });

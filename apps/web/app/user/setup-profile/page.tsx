@@ -8,7 +8,7 @@ import { api } from '@/services/api';
 import { useAuthStore } from '@/stores/auth.store';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { User } from 'lucide-react';
+import { MessageSquare, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const schema = z.object({
@@ -39,7 +39,6 @@ export default function SetupProfilePage() {
   const onSubmit = async (data: FormData) => {
     const codeId = sessionStorage.getItem('onboardingCodeId');
     if (!codeId) { router.replace('/user/verify-code'); return; }
-
     try {
       const { data: result } = await api.post('/access/setup-profile', {
         ...data,
@@ -48,7 +47,7 @@ export default function SetupProfilePage() {
       });
       sessionStorage.removeItem('onboardingCodeId');
       loginWithToken(result.accessToken, result.refreshToken, result.user);
-      toast.success('Welcome to Messenger!');
+      toast.success('Welcome to Gossip! 🎉');
       router.replace('/app/chats');
     } catch (err: any) {
       toast.error(err?.response?.data?.message || 'Failed to set up profile');
@@ -56,32 +55,59 @@ export default function SetupProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-12 h-12 bg-brand-100 rounded-xl flex items-center justify-center">
-            <User className="text-brand-600" size={24} />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-gray-900">Set Up Profile</h1>
-            <p className="text-sm text-gray-500">Almost there — create your account</p>
-          </div>
+    <div className="min-h-screen flex">
+      {/* Brand panel */}
+      <div className="hidden md:flex w-[420px] flex-shrink-0 bg-gradient-to-br from-brand-900 via-brand-700 to-brand-500 flex-col items-center justify-center px-10 text-center relative overflow-hidden">
+        <div className="absolute top-[-60px] right-[-60px] w-48 h-48 bg-white/10 rounded-full blur-2xl" />
+        <div className="absolute bottom-[-40px] left-[-40px] w-40 h-40 bg-brand-300/20 rounded-full blur-xl" />
+        <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-2xl mb-4 z-10">
+          <MessageSquare className="text-brand-500" size={32} />
         </div>
+        <h2 className="text-3xl font-black text-white z-10">Almost there!</h2>
+        <p className="text-brand-100 text-sm mt-2 z-10">Set up your profile to start gossiping</p>
+      </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <Input label="Full Name" {...register('name')} error={errors.name?.message} autoFocus />
-          <Input label="Username" {...register('username')} error={errors.username?.message} placeholder="e.g. john_doe" />
-          <Input label="Email" type="email" {...register('email')} error={errors.email?.message} />
-          <Input label="Phone (optional)" type="tel" {...register('phone')} />
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Bio (optional)</label>
-            <textarea {...register('bio')} rows={2} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none" />
+      {/* Form panel */}
+      <div className="flex-1 bg-gray-50 flex items-center justify-center p-6 overflow-y-auto">
+        <div className="bg-white rounded-3xl shadow-xl p-8 w-full max-w-sm">
+          {/* Mobile logo */}
+          <div className="flex md:hidden items-center gap-3 mb-6">
+            <div className="w-10 h-10 bg-brand-100 rounded-xl flex items-center justify-center">
+              <MessageSquare className="text-brand-500" size={20} />
+            </div>
+            <span className="text-xl font-black text-brand-600">Gossip</span>
           </div>
-          <Input label="Password (optional)" type="password" {...register('password')} error={errors.password?.message} placeholder="Set a login password" />
-          <Button type="submit" isLoading={isSubmitting} className="w-full">
-            Create Account & Enter
-          </Button>
-        </form>
+
+          <div className="flex items-center gap-3 mb-7">
+            <div className="w-11 h-11 bg-brand-100 rounded-2xl flex items-center justify-center">
+              <Sparkles className="text-brand-500" size={20} />
+            </div>
+            <div>
+              <h1 className="text-lg font-bold text-gray-900">Set Up Profile</h1>
+              <p className="text-xs text-gray-400 mt-0.5">Create your Gossip identity</p>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <Input label="Full Name" {...register('name')} error={errors.name?.message} autoFocus />
+            <Input label="Username" {...register('username')} error={errors.username?.message} placeholder="e.g. john_doe" />
+            <Input label="Email" type="email" {...register('email')} error={errors.email?.message} />
+            <Input label="Phone (optional)" type="tel" {...register('phone')} />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Bio <span className="text-gray-400 font-normal">(optional)</span></label>
+              <textarea
+                {...register('bio')}
+                rows={2}
+                placeholder="Tell people about yourself…"
+                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none"
+              />
+            </div>
+            <Input label="Password (optional)" type="password" {...register('password')} error={errors.password?.message} placeholder="Set a login password" />
+            <Button type="submit" isLoading={isSubmitting} className="w-full">
+              Create Account &amp; Enter Gossip
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   );

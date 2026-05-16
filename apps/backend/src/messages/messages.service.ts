@@ -171,9 +171,13 @@ export class MessagesService {
     if (message.senderId.toString() !== userId) {
       throw new ForbiddenException('Only the sender can delete for everyone');
     }
-    message.deletedForEveryone = true;
-    message.encryptedPayload = '';
-    await message.save();
+    // Use updateOne/$set to bypass Mongoose required-field validation on encryptedPayload.
+    // Setting the field to a placeholder is intentional — the client shows "deleted" UI
+    // regardless of the payload value once deletedForEveryone is true.
+    await this.messageModel.updateOne(
+      { _id: messageId },
+      { $set: { deletedForEveryone: true, encryptedPayload: '[deleted]' } },
+    );
     return { deleted: true, messageId };
   }
 

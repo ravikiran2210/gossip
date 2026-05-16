@@ -1,63 +1,71 @@
 import Link from 'next/link';
-import { Shield, Users, MessageSquare, Zap } from 'lucide-react';
+import { MessageSquare, Users, Zap, Shield } from 'lucide-react';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-900 via-brand-700 to-brand-500 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-brand-900 via-brand-700 to-brand-400 flex flex-col overflow-hidden relative">
+      {/* Decorative blobs */}
+      <div className="absolute top-[-80px] right-[-80px] w-72 h-72 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-[-60px] left-[-60px] w-56 h-56 bg-brand-300/20 rounded-full blur-2xl pointer-events-none" />
+
+      {/* Floating chat bubbles decoration */}
+      <div className="absolute top-20 right-8 md:right-24 opacity-20 pointer-events-none select-none">
+        <div className="bg-white rounded-2xl rounded-tr-sm px-4 py-2 text-brand-900 text-sm font-medium mb-2 shadow-lg">Hey! How are you? 👋</div>
+        <div className="bg-brand-300 rounded-2xl rounded-tl-sm px-4 py-2 text-white text-sm font-medium ml-8 shadow-lg">I'm great, thanks! 😊</div>
+        <div className="bg-white rounded-2xl rounded-tr-sm px-4 py-2 text-brand-900 text-sm font-medium mt-2 shadow-lg">Let's Gossip! 🎉</div>
+      </div>
+
       {/* Hero */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 text-center">
-        <div className="mb-6 flex items-center gap-3">
-          <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur">
-            <MessageSquare className="text-white" size={32} />
+      <div className="flex-1 flex flex-col items-center justify-center px-6 text-center z-10">
+        {/* Logo */}
+        <div className="mb-6 flex flex-col items-center gap-2">
+          <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center shadow-2xl shadow-brand-900/40">
+            <MessageSquare className="text-brand-500" size={40} />
           </div>
+          <h1 className="text-5xl sm:text-6xl font-black text-white tracking-tight mt-2">Gossip</h1>
+          <p className="text-brand-100 text-lg font-medium">Your conversations, your vibe.</p>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-          Secure Messenger
-        </h1>
-        <p className="text-lg text-blue-100 max-w-md mb-12">
-          A private, admin-gated realtime messaging platform. Request access to join.
-        </p>
 
         {/* Feature pills */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
+        <div className="flex flex-wrap justify-center gap-2.5 my-8">
           {[
-            { icon: Shield, label: 'Admin-gated access' },
-            { icon: Zap, label: 'Realtime messaging' },
-            { icon: Users, label: 'Group chats' },
+            { icon: Shield, label: 'Private & invite-only' },
+            { icon: Zap, label: 'Real-time messaging' },
+            { icon: Users, label: 'Groups & direct chats' },
           ].map(({ icon: Icon, label }) => (
-            <div key={label} className="flex items-center gap-2 bg-white/10 backdrop-blur rounded-full px-4 py-2 text-white text-sm">
-              <Icon size={14} />
+            <div key={label} className="flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 text-white text-sm font-medium">
+              <Icon size={14} className="text-brand-200" />
               {label}
             </div>
           ))}
         </div>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm">
+        <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
           <Link
             href="/user/request"
-            className="flex-1 bg-white text-brand-700 font-semibold px-8 py-4 rounded-xl text-center hover:bg-blue-50 transition-colors shadow-lg"
+            className="flex-1 bg-white text-brand-600 font-bold px-6 py-3.5 rounded-2xl text-center hover:bg-brand-50 transition-all shadow-xl shadow-brand-900/30 text-sm"
           >
             Request Access
           </Link>
           <Link
-            href="/admin/login"
-            className="flex-1 bg-white/15 backdrop-blur border border-white/30 text-white font-semibold px-8 py-4 rounded-xl text-center hover:bg-white/25 transition-colors"
+            href="/user/verify-code"
+            className="flex-1 bg-white/15 backdrop-blur-sm border border-white/30 text-white font-bold px-6 py-3.5 rounded-2xl text-center hover:bg-white/25 transition-all text-sm"
           >
-            Admin Login
+            Enter Code
           </Link>
         </div>
 
-        <p className="mt-6 text-blue-200 text-sm">
-          Already have an access code?{' '}
-          <Link href="/user/verify-code" className="text-white underline font-medium">
-            Verify code
+        <p className="mt-5 text-brand-200 text-xs">
+          Admin?{' '}
+          <Link href="/admin/login" className="text-white underline underline-offset-2 font-medium">
+            Sign in here
           </Link>
         </p>
       </div>
 
-      <footer className="text-center text-blue-200 text-xs py-4 px-4">
-        Powered by NestJS · Next.js · MongoDB · Socket.IO · Cloudinary
+      <footer className="text-center text-brand-200/60 text-xs py-4 px-4 z-10">
+        Gossip · Built with NestJS, Next.js &amp; Socket.IO
       </footer>
     </div>
   );

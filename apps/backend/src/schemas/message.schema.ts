@@ -50,7 +50,7 @@ export class Message {
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);
-MessageSchema.index({ messageId: 1 }, { unique: true });
+// messageId unique index is already created by @Prop({ unique: true }) above
 MessageSchema.index({ conversationId: 1, createdAt: -1 });
 MessageSchema.index({ senderId: 1 });
 MessageSchema.index({ conversationId: 1, encryptedPayload: 'text' });

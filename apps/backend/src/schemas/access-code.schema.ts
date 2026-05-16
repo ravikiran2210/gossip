@@ -35,5 +35,5 @@ export class AccessCode {
 }
 
 export const AccessCodeSchema = SchemaFactory.createForClass(AccessCode);
-AccessCodeSchema.index({ codeHash: 1 }, { unique: true });
+// codeHash unique index is already created by @Prop({ unique: true }) above
 AccessCodeSchema.index({ status: 1, expiresAt: 1 });

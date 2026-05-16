@@ -131,7 +131,7 @@ export default function SettingsPage() {
             </button>
           </div>
 
-          <p className="text-center text-xs text-gray-400">Messenger v1.0</p>
+          <p className="text-center text-xs text-gray-400">Gossip · v1.0</p>
         </div>
       </div>
     </AppLayout>

@@ -25,5 +25,4 @@ export class AdminUser {
 }
 
 export const AdminUserSchema = SchemaFactory.createForClass(AdminUser);
-AdminUserSchema.index({ email: 1 }, { unique: true });
-AdminUserSchema.index({ username: 1 }, { unique: true });
+// email and username unique indexes are already created by @Prop({ unique: true }) above

@@ -21,11 +21,13 @@ export default function ChatsPage() {
   return (
     <AppLayout>
       <ConversationList />
-      {/* Empty state — hidden on mobile (ConversationList fills the screen there) */}
-      <div className="hidden md:flex flex-1 flex-col items-center justify-center text-gray-400 bg-gray-50">
-        <MessageSquare size={48} className="mb-4 text-gray-300" />
-        <p className="text-lg font-medium text-gray-500">Select a conversation</p>
-        <p className="text-sm">or tap the compose icon to start a new one</p>
+      {/* Empty state — desktop only */}
+      <div className="hidden md:flex flex-1 flex-col items-center justify-center bg-[#f0f2f5] gap-3">
+        <div className="w-20 h-20 rounded-full bg-white shadow-sm flex items-center justify-center">
+          <MessageSquare size={36} className="text-brand-400" />
+        </div>
+        <p className="text-lg font-bold text-gray-600">Start gossiping</p>
+        <p className="text-sm text-gray-400">Select a chat or tap the compose icon to start one</p>
       </div>
     </AppLayout>
   );

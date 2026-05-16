@@ -52,5 +52,5 @@ export class MediaFile {
 }
 
 export const MediaFileSchema = SchemaFactory.createForClass(MediaFile);
-MediaFileSchema.index({ fileId: 1 }, { unique: true });
+// fileId unique index is already created by @Prop({ unique: true }) above
 MediaFileSchema.index({ uploaderId: 1 });

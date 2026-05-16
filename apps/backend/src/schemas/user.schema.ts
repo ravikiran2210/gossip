@@ -37,6 +37,5 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-UserSchema.index({ email: 1 }, { unique: true });
-UserSchema.index({ username: 1 }, { unique: true });
+// email and username unique indexes are already created by @Prop({ unique: true }) above
 UserSchema.index({ status: 1 });
